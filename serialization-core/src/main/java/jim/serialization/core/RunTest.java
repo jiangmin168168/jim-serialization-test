@@ -29,6 +29,13 @@ public class RunTest {
         stopwatch.stop();
         long kryoAvgTime=stopwatch.elapsed(TimeUnit.MICROSECONDS)/testCount;
 
+        //warmup
+        int warmupTestCount=100000;
+        for(int i=0;i<warmupTestCount;i++){
+            byte[] tmpBytes= NeoRedisValueCodecHelper.encodeToBytes(serializerModel, RedisCodecType.FURY);
+            NeoSerializerModel tmpModel= NeoRedisValueCodecHelper.decodeFromBytes(tmpBytes, RedisCodecType.FURY, NeoSerializerModel.class);
+        }
+
         stopwatch.start();
         for(int i=0;i<testCount;i++) {
             byte[] tmpBytes= NeoRedisValueCodecHelper.encodeToBytes(serializerModel, RedisCodecType.FURY);
@@ -47,7 +54,7 @@ public class RunTest {
         System.out.println(result);
                 ;
     }
-    private static NeoSerializerModel createModel(){
+    public static NeoSerializerModel createModel(){
         NeoSerializerModel neoSerializerModel=new NeoSerializerModel();
         int doubleCount=100;
         for(int i=1;i<=doubleCount;i++) {
